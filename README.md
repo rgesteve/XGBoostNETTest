@@ -12,5 +12,5 @@ relevant environment.
 There are two projects, the wrapper and a driver, it's meant to be run
 as
 ```
-$ docker run --project XGBoostNetLibDriver
+$ LD_LIBRARY_PATH=/home/vscode/micromamba/envs/xgboostlib/lib docker run --project XGBoostNetLibDriver
 ```

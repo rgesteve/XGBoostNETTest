@@ -6,7 +6,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine($"From the library {Dummy.Version}");
+        Console.WriteLine($"Dealing with XGBoost version {XGBoostUtils.XgbMajorVersion()}.");
         Console.WriteLine("Done!");
     }
 }

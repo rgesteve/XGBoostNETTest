@@ -8,11 +8,6 @@ using System.Text;
 
 namespace XGBoostNetLib
 {
-
-    public static class Dummy
-    {
-      public static string Version="First dummy version";
-    }
     
     /// <summary>
     /// Wrapper of the c interfaces of XGBoost

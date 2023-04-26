@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-#if false
 namespace XGBoostNetLib
 {
     public class XGBoostUtils
@@ -23,6 +22,7 @@ namespace XGBoostNetLib
             return new System.Version(major, minor, patch);
         }
 
+#if false
         // TODO: Should probably return a dictionary by parsing the JSON output
         public static string BuildInfo()
         {
@@ -37,8 +37,10 @@ namespace XGBoostNetLib
                 return result;
             }
         }
+#endif
     }
 
+#if false
 #pragma warning disable MSML_GeneralName
     public class XGBoostDLLException : Exception
 #pragma warning restore MSML_GeneralName
@@ -55,5 +57,6 @@ namespace XGBoostNetLib
         }
 
     }
-}
 #endif
+}
+
