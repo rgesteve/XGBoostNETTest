@@ -42,6 +42,23 @@ class Program
 	var dTrain = new DMatrix(features.ToArray(), sampleCount, featureCount, labels.ToArray());
         Console.WriteLine($"The created matrix has {dTrain.GetNumRows()} rows.");
 
+	Booster bst = new Booster(dTrain);
+
+        bst.SetParameter("booster", "gbtree");
+        bst.SetParameter("objective", "binary:logistic");
+        bst.SetParameter("max_depth", "1");
+
+        int numBoostRound = 2;
+        for (int i = 0; i < numBoostRound; i++) {
+                bst.Update(dTrain, i);
+        }
+	                
+        var modelSersArray = bst.DumpModel();
+	Console.WriteLine($"Got {modelSersArray.Length} serialized components.");
+	for (int i = 0; i < modelSersArray.Length; i++) {
+	  Console.WriteLine($"Model {i}: {modelSersArray[i]}.");
+	}
+
         Console.WriteLine("Done!");
     }
 }

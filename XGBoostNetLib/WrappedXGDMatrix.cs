@@ -82,7 +82,6 @@ namespace XGBoostNetLib
         }
 
 #if false
-#if false
         public Span<float> GetLabels()
         {
             // FIXME -- some issue with the span serializer
@@ -109,7 +108,6 @@ namespace XGBoostNetLib
                 return managedArray;
             }
         }
-#endif
 #endif
 
         public void Dispose()

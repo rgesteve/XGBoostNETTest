@@ -26,23 +26,25 @@ using Microsoft.ML.Trainers.FastTree;
 using Microsoft.ML.Transforms;
 #endif
 
-#if false
 namespace XGBoostNetLib
 {
     /// <summary>
     /// Wrapper of Booster object of XGBoost.
     /// </summary>
-    internal class Booster : IDisposable
+    public class Booster : IDisposable
     {
 #pragma warning disable MSML_PrivateFieldName // Private field name not in: _camelCase format
         private bool disposed;
         private readonly IntPtr _handle;
         private const int normalPrediction = 0; // Value for the optionMask in prediction
+	#if false
         private int numClass = 1;
+	#endif
 #pragma warning restore MSML_PrivateFieldName
 
         public IntPtr Handle => _handle;
 
+    #if false
         public Booster(Dictionary<string, object> parameters, DMatrix trainDMatrix)
         {
             var dmats = new[] { trainDMatrix.Handle };
@@ -55,6 +57,7 @@ namespace XGBoostNetLib
             }
             SetParameters(parameters);
         }
+	#endif
 
         public Booster(DMatrix trainDMatrix)
         {
@@ -78,6 +81,30 @@ namespace XGBoostNetLib
             }
         }
 
+        public unsafe string[] DumpModel()
+        {
+#pragma warning disable MSML_ParameterLocalVarName // Parameter or local variable name not standard
+            ulong boosters_len;
+            byte** booster_raw_arr;
+#pragma warning restore MSML_ParameterLocalVarName // Parameter or local variable name not standard
+            var errp = WrappedXGBoostInterface.XGBoosterDumpModelEx(_handle, "", 0, "json", out boosters_len, out booster_raw_arr);
+            if (errp == -1)
+            {
+                string reason = WrappedXGBoostInterface.XGBGetLastError();
+                throw new XGBoostDLLException(reason);
+            }
+
+            var result = new string[boosters_len];
+
+            for (ulong i = 0; i < boosters_len; ++i)
+            {
+                result[i] = Marshal.PtrToStringUTF8((nint)booster_raw_arr[i]) ?? "";
+            }
+
+	    return result;
+        }
+
+#if false
         public unsafe void DumpAttributes()
         {
 #pragma warning disable MSML_PrivateFieldName // Private field name not in: _camelCase format
@@ -167,6 +194,7 @@ namespace XGBoostNetLib
             }
 
         }
+	#endif
 
         public void SetParameter(string name, string val)
         {
@@ -179,6 +207,7 @@ namespace XGBoostNetLib
             }
         }
 
+#if false
         #region Create Models
 
         public class XgbNode
@@ -561,6 +590,7 @@ namespace XGBoostNetLib
         }
 #endif
         #endregion
+	#endif
 
         #region IDisposable Support
         public void Dispose()
@@ -581,4 +611,4 @@ namespace XGBoostNetLib
         #endregion
     }
 }
-#endif
+

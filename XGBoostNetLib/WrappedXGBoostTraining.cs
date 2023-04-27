@@ -117,7 +117,6 @@ namespace XGBoostNetLib
             return bst;
 #else
 
-            System.Console.WriteLine($"Training: DMatrix has {dtrain.GetNumRows()} rows and {dtrain.GetNumCols()} columns.");
             Booster bst = new Booster(dtrain);
 
             // TODO: Pass all configuration parameters to the booster.
