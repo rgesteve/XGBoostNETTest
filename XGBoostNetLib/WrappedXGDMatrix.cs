@@ -5,13 +5,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if false
 namespace XGBoostNetLib
 {
     /// <summary>
     /// Wrapper of DMatrix object of XGBoost
     /// </summary>
-    internal sealed class DMatrix : IDisposable
+    public sealed class DMatrix : IDisposable
     {
 #pragma warning disable MSML_PrivateFieldName
         private bool disposed = false;
@@ -69,8 +68,10 @@ namespace XGBoostNetLib
 
         public void SetLabel(float[] labels)
         {
+	#if false
             Contracts.AssertValue(labels);
             Contracts.Assert(labels.Length == GetNumRows());
+	    #endif
 
             int errp = WrappedXGBoostInterface.XGDMatrixSetFloatInfo(_handle, "label", labels, (ulong)labels.Length);
             if (errp == -1)
@@ -80,6 +81,7 @@ namespace XGBoostNetLib
             }
         }
 
+#if false
 #if false
         public Span<float> GetLabels()
         {
@@ -108,7 +110,7 @@ namespace XGBoostNetLib
             }
         }
 #endif
-
+#endif
 
         public void Dispose()
         {
@@ -132,7 +134,8 @@ namespace XGBoostNetLib
             disposed = true;
 
         }
+
     }
 }
 
-#endif
+

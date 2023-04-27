@@ -23,8 +23,8 @@ class Program
 	var df = DataFrame.LoadCsv(dataPath, header: false);
 	// (df as IDataView).Schema
 
-	var sampleCount = df.Rows.Count;
-	var featureCount = df.Columns.Count - 1;
+	var sampleCount = (uint)(df.Rows.Count);
+	var featureCount = (uint)(df.Columns.Count - 1);
 	
 	List<float> features = new();
 	List<float> labels = new();
@@ -38,6 +38,10 @@ class Program
         Console.WriteLine($"Checking that I have {sampleCount} samples: ({labels.Count()}, {features.Count() / featureCount})");
 
         Console.WriteLine($"Dealing with XGBoost version {XGBoostUtils.XgbMajorVersion()}.");
+
+	var dTrain = new DMatrix(features.ToArray(), sampleCount, featureCount, labels.ToArray());
+        Console.WriteLine($"The created matrix has {dTrain.GetNumRows()} rows.");
+
         Console.WriteLine("Done!");
     }
 }

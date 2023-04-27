@@ -40,7 +40,6 @@ namespace XGBoostNetLib
 #endif
     }
 
-#if false
 #pragma warning disable MSML_GeneralName
     public class XGBoostDLLException : Exception
 #pragma warning restore MSML_GeneralName
@@ -57,6 +56,6 @@ namespace XGBoostNetLib
         }
 
     }
-#endif
+
 }
 
