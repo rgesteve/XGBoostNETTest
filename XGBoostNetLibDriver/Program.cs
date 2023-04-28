@@ -56,6 +56,8 @@ var options = new XGBoostBinaryTrainer.Options() {
   UnbalancedSets = true,
   WeightOfPositiveExamples = 0.5
 };
+
+    Console.WriteLine($"Setting the weight of pos examples to: {options.WeightOfPositiveExamples}.");
 #endif
 
 #if false

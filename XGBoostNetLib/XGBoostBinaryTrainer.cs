@@ -67,27 +67,24 @@ namespace XGBoostNetLib
     /// The <see cref="IEstimator{TTransformer}"/> for training a boosted decision tree binary classification model using XGBoost.
     /// </summary>
     public sealed class XGBoostBinaryTrainer
-    #if false
-    : XGBoostTrainerBase<XGBoostBinaryTrainer.Options, float,
-        BinaryPredictionTransformer<CalibratedModelParametersBase<XGBoostBinaryModelParameters, PlattCalibrator>>,
-        CalibratedModelParametersBase<XGBoostBinaryModelParameters, PlattCalibrator>>
-    #endif
+    : XGBoostTrainerBase<XGBoostBinaryTrainer.Options
+#if false
+      , float
+      , BinaryPredictionTransformer<CalibratedModelParametersBase<XGBoostBinaryModelParameters, PlattCalibrator>>
+      , CalibratedModelParametersBase<XGBoostBinaryModelParameters, PlattCalibrator>
+#endif
+      >
     {
-        #pragma warning disable CS0109
-        internal const string UserName = "XGBoost Binary Classifier";
-        internal const string LoadNameValue = "XGBoostBinary";
+        internal new const string UserNameValue = "XGBoost Binary Classifier";
+        internal new const string LoadNameValue = "XGBoostBinary";
         internal const string ShortName = "XGBoostB";
-        internal const string Summary = "Train a XGBoost binary classification model.";
-        #pragma warning restore CS0109
+        internal new const string Summary = "Train a XGBoost binary classification model.";
 
 #if false
         private protected override PredictionKind PredictionKind => PredictionKind.BinaryClassification;
 #endif
 
-        public sealed class Options
-	#if false
-	: OptionsBase
-	#endif
+        public sealed class Options : OptionsBase
         {
             public enum EvaluateMetricType
             {

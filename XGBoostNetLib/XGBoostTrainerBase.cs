@@ -1,15 +1,12 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if false
 namespace XGBoostNetLib
 {
+#if false
     [BestFriend]
+#endif
     internal static class Defaults
     {
         public const int NumberOfIterations = 100;
@@ -24,15 +21,27 @@ namespace XGBoostNetLib
         public static readonly object LockForMultiThreadingInside = new object();
     }
 
-    public abstract class XGBoostTrainerBase<TOptions, TOutput, TTransformer, TModel> : TrainerEstimatorBaseWithGroupId<TTransformer, TModel>
+
+    public abstract class XGBoostTrainerBase<TOptions
+#if false
+    , TOutput, TTransformer, TModel> : TrainerEstimatorBaseWithGroupId<TTransformer, TModel
+#endif
+    >
+#if false
         where TTransformer : ISingleFeaturePredictionTransformer<TModel>
         where TModel : class // IPredictorProducing<float>
-        where TOptions : XGBoostTrainerBase<TOptions, TOutput, TTransformer, TModel>.OptionsBase, new()
+#endif
+        where TOptions : XGBoostTrainerBase<TOptions
+#if false
+	, TOutput, TTransformer, TModel
+#endif
+	>.OptionsBase, new()
     {
         internal const string LoadNameValue = "XGBoostPredictor";
         internal const string UserNameValue = "XGBoost Predictor";
         internal const string Summary = "The base logic for all XGBoost-based trainers.";
 
+#if false
         private protected int FeatureCount;
         private protected InternalTreeEnsemble TrainedEnsemble;
 
@@ -43,10 +52,15 @@ namespace XGBoostNetLib
         {
             System.Console.WriteLine("**** In base trainer ctor 1");
         }
+#endif
 
-        public class OptionsBase : TrainerInputBaseWithGroupId
+
+        public class OptionsBase
+#if false
+	: TrainerInputBaseWithGroupId
+#endif
         {
-
+#if false
             // Static override name map that maps friendly names to XGBMArguments arguments.
             // If an argument is not here, then its name is identical to a lightGBM argument
             // and does not require a mapping, for example, Subsample.
@@ -76,6 +90,7 @@ namespace XGBoostNetLib
                {nameof(HandleMissingValue),                   "use_missing" },
                {nameof(UseZeroAsMissingValue),                "zero_as_missing" }
             };
+#endif
 
             /// <summary>
             /// The maximum number of bins that feature values will be bucketed in.
@@ -137,8 +152,10 @@ namespace XGBoostNetLib
             /// Maximum categorical split points to consider when splitting on a categorical feature.
             /// </summary>
             [Argument(ArgumentType.AtMostOnce, HelpText = "Max number of categorical thresholds.", ShortName = "maxcat")]
-            [TlcModule.Range(Inf = 0, Max = int.MaxValue)]
+#if false
+	    [TlcModule.Range(Inf = 0, Max = int.MaxValue)]
             [TlcModule.SweepableDiscreteParam("MaxCatThreshold", new object[] { 8, 16, 32, 64 })]
+#endif
             public int MaximumCategoricalSplitPointCount = 32;
 
             /// <summary>
@@ -189,6 +206,7 @@ namespace XGBoostNetLib
             [Argument(ArgumentType.AtMostOnce, HelpText = "Minimum number of instances per categorical group.", ShortName = "mdpg")]
             public int MinimumExampleCountPerGroup = 100;
 
+#if false
             private BoosterParameterBase.OptionsBase _boosterParameter;
 
             /// <summary>
@@ -217,6 +235,7 @@ namespace XGBoostNetLib
                 }
 
             }
+#endif
 
             /// <summary>
             /// Determines whether to output progress status during training and evaluation.
@@ -233,6 +252,7 @@ namespace XGBoostNetLib
             [Argument(ArgumentType.AtMostOnce, HelpText = "Printing running messages.")]
             public bool Silent = true;
 
+#if false
             private protected string GetOptionName(string name)
             {
                 if (NameMapping.ContainsKey(name))
@@ -266,6 +286,7 @@ if (NumberOfThreads.HasValue)
                 res[GetOptionName(nameof(L2CategoricalRegularization))] = L2CategoricalRegularization;
                 return res;
             }
+#endif
 
             /// <summary>
             /// The number of boosting iterations. A new tree is created in each iteration, so this is equivalent to the number of trees.
@@ -274,6 +295,7 @@ if (NumberOfThreads.HasValue)
             public int NumberOfIterations = Defaults.NumberOfIterations;
         }
 
+#if false
         // Contains the passed in options when the API is called
         private protected readonly TOptions XGBoostTrainerOptions;
 
@@ -622,6 +644,7 @@ if (NumberOfThreads.HasValue)
 	    , float[] labels, int[] groups
 #endif
         );
+#endif
     }
 }
-#endif
+

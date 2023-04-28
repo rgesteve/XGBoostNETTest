@@ -61,17 +61,19 @@ namespace XGBoostNetLib
     /// The <see cref="IEstimator{TTransformer}"/> for training a boosted decision tree regression model using XGBoost.
     /// </summary>
     public sealed class XGBoostRegressionTrainer
-#if false
     :
-        XGBoostTrainerBase<XGBoostRegressionTrainer.Options, float, RegressionPredictionTransformer<XGBoostRegressionModelParameters>, XGBoostRegressionModelParameters>
+        XGBoostTrainerBase<XGBoostRegressionTrainer.Options
+#if false
+	, float
+	, RegressionPredictionTransformer<XGBoostRegressionModelParameters>
+	, XGBoostRegressionModelParameters
 #endif
+	>
     {
-    #pragma warning disable CS0109
         internal new const string Summary = "XGBoost Regression";
         internal new const string LoadNameValue = "XGBoostRegression";
         internal const string ShortName = "XGBoostR";
         internal new const string UserNameValue = "XGBoost Regressor";
-    #pragma warning restore CS0109
 
 #if false
         public override TrainerInfo Info => throw new System.NotImplementedException();
@@ -95,10 +97,7 @@ namespace XGBoostNetLib
         /// Options for the <see cref="XGBoostRegressionTrainer"/> as used in
         /// [XGBoost(Options)](xref:Microsoft.ML.XGBoostExtensions.XGBoost(Microsoft.ML.RegressionCatalog.RegressionTrainers,Microsoft.ML.Trainers.XGBoost.XGBoostRegressionTrainer.Options)).
         /// </summary>
-        public sealed class Options
-	#if false
-	: OptionsBase
-	#endif
+        public sealed class Options : OptionsBase
         {
 #if false
 	    public enum EvaluateMetricType
