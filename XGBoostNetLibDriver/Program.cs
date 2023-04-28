@@ -52,7 +52,10 @@ var pipeline = mlContext.Regression.Trainers.XGBoost(
                  }
              });
 #else
-var options = new XGBoostBinaryTrainer.Options();
+var options = new XGBoostBinaryTrainer.Options() {
+  UnbalancedSets = true,
+  WeightOfPositiveExamples = 0.5
+};
 #endif
 
 #if false

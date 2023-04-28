@@ -98,7 +98,6 @@ namespace XGBoostNetLib
                 AreaUnderCurve,
             };
 
-#if false
             /// <summary>
             /// Whether training data is unbalanced.
             /// </summary>
@@ -121,7 +120,9 @@ namespace XGBoostNetLib
             /// Parameter for the sigmoid function.
             /// </summary>
             [Argument(ArgumentType.AtMostOnce, HelpText = "Parameter for the sigmoid function.", ShortName = "sigmoid")]
+#if false
             [TGUI(Label = "Sigmoid", SuggestedSweeps = "0.5,1")]
+#endif
             public double Sigmoid = 0.5;
 
             /// <summary>
@@ -132,6 +133,7 @@ namespace XGBoostNetLib
                 ShortName = "em")]
             public EvaluateMetricType EvaluationMetric = EvaluateMetricType.Logloss;
 
+#if false
             static Options()
             {
                 NameMapping.Add(nameof(EvaluateMetricType), "metric");
