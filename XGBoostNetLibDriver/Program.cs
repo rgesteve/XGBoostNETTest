@@ -37,6 +37,25 @@ class Program
 
         Console.WriteLine($"Checking that I have {sampleCount} samples: ({labels.Count()}, {features.Count() / featureCount})");
 
+
+#if false
+var pipeline = mlContext.Regression.Trainers.XGBoost(
+             new XGBoostRegressionTrainer.Options
+             {
+                 //                    LabelColumnName = labelName,
+                 NumberOfLeaves = 4,
+                 MinimumExampleCountPerLeaf = 6,
+                 LearningRate = 0.001,
+                 Booster = new DartBooster.Options()
+                 {
+                     TreeDropFraction = 0.124
+                 }
+             });
+#else
+var options = new XGBoostBinaryTrainer.Options();
+#endif
+
+#if false
         Console.WriteLine($"Dealing with XGBoost version {XGBoostUtils.XgbMajorVersion()}.");
 
 	var dTrain = new DMatrix(features.ToArray(), sampleCount, featureCount, labels.ToArray());
@@ -46,7 +65,7 @@ class Program
 
         bst.SetParameter("booster", "gbtree");
         bst.SetParameter("objective", "binary:logistic");
-        bst.SetParameter("max_depth", "1");
+        bst.SetParameter("max_depth", "2");
 
         int numBoostRound = 2;
         for (int i = 0; i < numBoostRound; i++) {
@@ -58,6 +77,7 @@ class Program
 	for (int i = 0; i < modelSersArray.Length; i++) {
 	  Console.WriteLine($"Model {i}: {modelSersArray[i]}.");
 	}
+#endif
 
         Console.WriteLine("Done!");
     }

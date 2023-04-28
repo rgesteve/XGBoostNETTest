@@ -1,13 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-#if false
 namespace XGBoostNetLib
 {
+#if false
     /// <summary>
     /// Model parameters for <see cref="XGBoostRegressionTrainer"/>.
     /// </summary>
@@ -59,18 +55,25 @@ namespace XGBoostNetLib
             return new XGBoostRegressionModelParameters(env, ctx);
         }
     }
+#endif
 
     /// <summary>
     /// The <see cref="IEstimator{TTransformer}"/> for training a boosted decision tree regression model using XGBoost.
     /// </summary>
-    public sealed class XGBoostRegressionTrainer :
+    public sealed class XGBoostRegressionTrainer
+#if false
+    :
         XGBoostTrainerBase<XGBoostRegressionTrainer.Options, float, RegressionPredictionTransformer<XGBoostRegressionModelParameters>, XGBoostRegressionModelParameters>
+#endif
     {
+    #pragma warning disable CS0109
         internal new const string Summary = "XGBoost Regression";
         internal new const string LoadNameValue = "XGBoostRegression";
         internal const string ShortName = "XGBoostR";
         internal new const string UserNameValue = "XGBoost Regressor";
+    #pragma warning restore CS0109
 
+#if false
         public override TrainerInfo Info => throw new System.NotImplementedException();
 
         private protected override PredictionKind PredictionKind => PredictionKind.Regression;
@@ -86,13 +89,19 @@ namespace XGBoostNetLib
         private protected override RegressionPredictionTransformer<XGBoostRegressionModelParameters> MakeTransformer(XGBoostRegressionModelParameters model, DataViewSchema trainSchema)
             => new RegressionPredictionTransformer<XGBoostRegressionModelParameters>(Host, model, trainSchema, FeatureColumn.Name);
 
+#endif
+
         /// <summary>
         /// Options for the <see cref="XGBoostRegressionTrainer"/> as used in
         /// [XGBoost(Options)](xref:Microsoft.ML.XGBoostExtensions.XGBoost(Microsoft.ML.RegressionCatalog.RegressionTrainers,Microsoft.ML.Trainers.XGBoost.XGBoostRegressionTrainer.Options)).
         /// </summary>
-        public sealed class Options : OptionsBase
+        public sealed class Options
+	#if false
+	: OptionsBase
+	#endif
         {
-            public enum EvaluateMetricType
+#if false
+	    public enum EvaluateMetricType
             {
                 None,
                 Default,
@@ -125,8 +134,10 @@ namespace XGBoostNetLib
 
                 return res;
             }
+#endif
         }
 
+#if false
         /// <summary>
         /// Initializes a new instance of <see cref="XGBoostRegressionTrainer"/>
         /// </summary>
@@ -213,6 +224,7 @@ namespace XGBoostNetLib
             };
         }
 #endif
+#endif
     }
 }
-#endif
+
