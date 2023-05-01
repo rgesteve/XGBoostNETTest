@@ -171,12 +171,14 @@ namespace XGBoostNetLib
             })
         {
         }
+#endif
 
-        internal XGBoostRegressionTrainer(IHostEnvironment env, Options options)
-             : base(env, LoadNameValue, options, TrainerUtils.MakeR4ScalarColumn(options.LabelColumnName))
+        internal XGBoostRegressionTrainer(/* IHostEnvironment env, */ Options options)
+             : base( /* env, LoadNameValue, */ options /* , TrainerUtils.MakeR4ScalarColumn(options.LabelColumnName) */)
         {
         }
 
+#if false
         private protected override XGBoostRegressionModelParameters CreatePredictor()
         {
             Host.Check(TrainedEnsemble != null,

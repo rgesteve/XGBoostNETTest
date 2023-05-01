@@ -54,8 +54,14 @@ var pipeline = mlContext.Regression.Trainers.XGBoost(
 #else
 var options = new XGBoostBinaryTrainer.Options() {
   UnbalancedSets = true,
-  WeightOfPositiveExamples = 0.5
+  WeightOfPositiveExamples = 0.5,
+  Booster = new DartBooster.Options()
+  {
+      TreeDropFraction = 0.124
+  }
 };
+
+var pipeline = new XGBoostBinaryTrainer(options);
 
     Console.WriteLine($"Setting the weight of pos examples to: {options.WeightOfPositiveExamples}.");
 #endif

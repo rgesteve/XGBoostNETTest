@@ -47,13 +47,14 @@ namespace XGBoostNetLib
 
         private protected XGBoostTrainerBase(IHost host,
             SchemaShape.Column feature,
-            SchemaShape.Column label, SchemaShape.Column weight = default, SchemaShape.Column groupId = default)
+            SchemaShape.Column label,
+	    SchemaShape.Column weight = default,
+	    SchemaShape.Column groupId = default)
             : base(host, feature, label, weight, groupId)
         {
             System.Console.WriteLine("**** In base trainer ctor 1");
         }
 #endif
-
 
         public class OptionsBase
 #if false
@@ -291,7 +292,6 @@ if (NumberOfThreads.HasValue)
             public int NumberOfIterations = Defaults.NumberOfIterations;
         }
 
-#if false
         // Contains the passed in options when the API is called
         private protected readonly TOptions XGBoostTrainerOptions;
 
@@ -302,6 +302,7 @@ if (NumberOfThreads.HasValue)
         /// </summary>
         private protected readonly Dictionary<string, object> GbmOptions;
 
+#if false
         private protected override TModel TrainModelCore(TrainContext context)
         {
             InitializeBeforeTraining();
@@ -505,11 +506,24 @@ if (NumberOfThreads.HasValue)
         {
             System.Console.WriteLine("***** In base trainer ctor 2");
         }
+	#endif
 
-        private protected XGBoostTrainerBase(IHostEnvironment env, string name, TOptions options, SchemaShape.Column label)
+        private protected XGBoostTrainerBase(
+#if false
+	IHostEnvironment env,
+	string name,
+#endif
+	TOptions options //,
+#if false
+	SchemaShape.Column label
+#endif
+	)
+#if false
            : base(Contracts.CheckRef(env, nameof(env)).Register(name), TrainerUtils.MakeR4VecFeature(options.FeatureColumnName), label,
          TrainerUtils.MakeR4ScalarWeightColumn(options.ExampleWeightColumnName), TrainerUtils.MakeU4ScalarColumn(options.RowGroupColumnName))
+#endif
         {
+#if false
             Host.CheckValue(options, nameof(options));
 #if false
             Contracts.CheckUserArg(options.NumberOfIterations >= 0, nameof(options.NumberOfIterations), "must be >= 0.");
@@ -519,12 +533,16 @@ if (NumberOfThreads.HasValue)
             Contracts.CheckUserArg(options.CategoricalSmoothing >= 0, nameof(options.CategoricalSmoothing), "must be >= 0.");
             Contracts.CheckUserArg(options.L2CategoricalRegularization >= 0.0, nameof(options.L2CategoricalRegularization), "must be >= 0.");
 #endif
+#endif
             System.Console.WriteLine("***** In base trainer ctor 3");
 
+#if false
             XGBoostTrainerOptions = options;
             GbmOptions = XGBoostTrainerOptions.ToDictionary(Host);
+#endif
         }
 
+#if false
         private protected virtual void CheckDataValid(IChannel ch, RoleMappedData data)
         {
             data.CheckFeatureFloatVector();

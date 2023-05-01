@@ -154,15 +154,26 @@ namespace XGBoostNetLib
             }
 	    #endif
         }
-	
+
+        public XGBoostBinaryTrainer(/* IHostEnvironment env, */ Options options)
+             : base(
 #if false
-        internal XGBoostBinaryTrainer(IHostEnvironment env, Options options)
-             : base(env, LoadNameValue, options, TrainerUtils.MakeBoolScalarLabel(options.LabelColumnName))
+	     env, LoadNameValue,
+#endif
+	     options
+#if false
+	     , TrainerUtils.MakeBoolScalarLabel(options.LabelColumnName)
+#endif
+	     )
         {
+	System.Console.WriteLine("In binary trainer constructor");
+#if false
             Contracts.CheckUserArg(options.Sigmoid > 0, nameof(Options.Sigmoid), "must be > 0.");
             Contracts.CheckUserArg(options.WeightOfPositiveExamples > 0, nameof(Options.WeightOfPositiveExamples), "must be > 0.");
+#endif
         }
 
+#if false
         /// <summary>
         /// Initializes a new instance of <see cref="XGBoostBinaryTrainer"/>
         /// </summary>
