@@ -1,42 +1,44 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
-#if false
 namespace XGBoostNetLib
 {
+#if false
     internal delegate void SignatureXGBoostBooster();
 
     [TlcModule.ComponentKind("BoosterParameterFunction")]
-    internal interface IBoosterParameterFactory : IComponentFactory<BoosterParameterBase>
+#endif
+    internal interface IBoosterParameterFactory
+    #if false
+    : IComponentFactory<BoosterParameterBase>
+    #endif
     {
-        new BoosterParameterBase CreateComponent(IHostEnvironment env);
+#pragma warning disable CS0109
+        new BoosterParameterBase CreateComponent(
+#if false
+	IHostEnvironment env
+#endif	
+	);
+#pragma warning restore CS0109
     }
 
     public abstract class BoosterParameterBase
     {
-
         private protected static Dictionary<string, string> NameMapping = new Dictionary<string, string>()
         {
            {nameof(OptionsBase.MinimumSplitGain),               "min_split_gain" },
-            {nameof(OptionsBase.MaximumTreeDepth),               "max_depth"},
-	    #if false
+           {nameof(OptionsBase.MaximumTreeDepth),               "max_depth"},
            {nameof(OptionsBase.MinimumChildWeight),             "min_child_weight"},
-	   #endif
-{nameof(OptionsBase.SubsampleFraction),              "subsample"},
+	   {nameof(OptionsBase.SubsampleFraction),              "subsample"},
            {nameof(OptionsBase.SubsampleFrequency),             "subsample_freq"},
            {nameof(OptionsBase.L1Regularization),               "reg_alpha"},
            {nameof(OptionsBase.L2Regularization),               "reg_lambda"},
         };
 
-
         public BoosterParameterBase(OptionsBase options)
         {
-            Contracts.CheckUserArg(options.MinimumSplitGain >= 0, nameof(OptionsBase.MinimumSplitGain), "must be >= 0.");
 #if false
+            Contracts.CheckUserArg(options.MinimumSplitGain >= 0, nameof(OptionsBase.MinimumSplitGain), "must be >= 0.");
             Contracts.CheckUserArg(options.MinimumChildWeight >= 0, nameof(OptionsBase.MinimumChildWeight), "must be >= 0.");
             Contracts.CheckUserArg(options.SubsampleFraction > 0 && options.SubsampleFraction <= 1, nameof(OptionsBase.SubsampleFraction), "must be in (0,1].");
             Contracts.CheckUserArg(options.FeatureFraction > 0 && options.FeatureFraction <= 1, nameof(OptionsBase.FeatureFraction), "must be in (0,1].");
@@ -58,7 +60,9 @@ namespace XGBoostNetLib
             [Argument(ArgumentType.AtMostOnce,
                 HelpText = "Minimum loss reduction required to make a further partition on a leaf node of the tree. the larger, " +
                     "the more conservative the algorithm will be.")]
+#if false
             [TlcModule.Range(Min = 0.0)]
+#endif
             public double MinimumSplitGain = 0;
 
             /// <summary>
@@ -71,8 +75,7 @@ namespace XGBoostNetLib
                 HelpText = "Maximum depth of a tree. 0 means no limit. However, tree still grows by best-first.")]
             public int MaximumTreeDepth = 0;
 
-#if false
-/// <summary>
+	    /// <summary>
             /// The minimum sum of instance weight needed to form a new node.
             /// </summary>
             /// <value>
@@ -84,9 +87,10 @@ namespace XGBoostNetLib
                 HelpText = "Minimum sum of instance weight(hessian) needed in a child. If the tree partition step results in a leaf " +
                     "node with the sum of instance weight less than min_child_weight, then the building process will give up further partitioning. In linear regression mode, " +
                     "this simply corresponds to minimum number of instances needed to be in each node. The larger, the more conservative the algorithm will be.")]
+#if false
             [TlcModule.Range(Min = 0.0)]
-            public double MinimumChildWeight = 0.1;
 #endif
+            public double MinimumChildWeight = 0.1;
 
             /// <summary>
             /// The frequency of performing subsampling (bagging).
@@ -149,10 +153,16 @@ namespace XGBoostNetLib
                 ShortName = "l1")]
             public double L1Regularization = 0;
 
+#if false
             BoosterParameterBase IComponentFactory<BoosterParameterBase>.CreateComponent(IHostEnvironment env)
                 => BuildOptions();
+#endif
 
-            BoosterParameterBase IBoosterParameterFactory.CreateComponent(IHostEnvironment env)
+            BoosterParameterBase IBoosterParameterFactory.CreateComponent(
+#if false
+	    IHostEnvironment env
+#endif
+	    )
                 => BuildOptions();
 
             internal abstract BoosterParameterBase BuildOptions();
@@ -181,7 +191,7 @@ namespace XGBoostNetLib
 
         private protected OptionsBase BoosterOptions;
     }
-
+    
     /// <summary>
     /// Gradient boosting decision tree.
     /// </summary>
@@ -196,7 +206,9 @@ namespace XGBoostNetLib
         /// <summary>
         /// The options for <see cref="GradientBooster"/>, used for setting <see cref="Booster"/>.
         /// </summary>
+#if false
         [TlcModule.Component(Name = Name, FriendlyName = FriendlyName, Desc = "Traditional Gradient Boosting Decision Tree.")]
+#endif
         public sealed class Options : OptionsBase
         {
             internal override BoosterParameterBase BuildOptions() => new GradientBooster(this);
@@ -210,9 +222,7 @@ namespace XGBoostNetLib
         internal override IBoosterParameterFactory BuildFactory() => BoosterOptions;
 
         internal override string BoosterName => Name;
-
     }
-
 
     /// <summary>
     /// DART booster (Dropouts meet Multiple Additive Regression Trees)
@@ -225,11 +235,12 @@ namespace XGBoostNetLib
         internal const string Name = "dart";
         internal const string FriendlyName = "Tree Dropout Tree Booster";
 
-
         /// <summary>
         /// The options for <see cref="DartBooster"/>, used for setting <see cref="Booster"/>.
         /// </summary>
+#if false
         [TlcModule.Component(Name = Name, FriendlyName = FriendlyName, Desc = "Dropouts meet Multiple Additive Regresion Trees. See https://arxiv.org/abs/1505.01866")]
+#endif
         public sealed class Options : OptionsBase
         {
             static Options()
@@ -246,24 +257,26 @@ namespace XGBoostNetLib
             /// Valid range is [0,1].
             /// </value>
             [Argument(ArgumentType.AtMostOnce, HelpText = "The drop ratio for trees. Range:(0,1).")]
+#if false
             [TlcModule.Range(Inf = 0.0, Max = 1.0)]
+#endif
             public double TreeDropFraction = 0.1;
 
             /// <summary>
             /// The probability of skipping the dropout procedure during a boosting iteration.
             /// </summary>
             [Argument(ArgumentType.AtMostOnce, HelpText = "Probability for not dropping in a boosting round.")]
+#if false
             [TlcModule.Range(Inf = 0.0, Max = 1.0)]
+#endif
             public double SkipDropFraction = 0.5;
 
-#if false
             /// <summary>
             /// Whether to enable uniform drop.
             /// Allowed values: "uniform" or "weighted"
             /// </summary>
             [Argument(ArgumentType.AtMostOnce, HelpText = "True will enable uniform drop.")]
             public bool UniformDrop = false;
-#endif
 
             internal override BoosterParameterBase BuildOptions() => new DartBooster(this);
         }
@@ -271,8 +284,10 @@ namespace XGBoostNetLib
         internal DartBooster(Options options)
             : base(options)
         {
+#if false
             Contracts.CheckUserArg(options.TreeDropFraction > 0 && options.TreeDropFraction < 1, nameof(options.TreeDropFraction), "must be in (0,1).");
             Contracts.CheckUserArg(options.SkipDropFraction >= 0 && options.SkipDropFraction < 1, nameof(options.SkipDropFraction), "must be in [0,1).");
+#endif
             BoosterOptions = options;
         }
 
@@ -281,4 +296,4 @@ namespace XGBoostNetLib
     }
 
 }
-#endif
+
