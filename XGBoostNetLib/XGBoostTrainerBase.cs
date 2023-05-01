@@ -60,7 +60,6 @@ namespace XGBoostNetLib
 	: TrainerInputBaseWithGroupId
 #endif
         {
-#if false
             // Static override name map that maps friendly names to XGBMArguments arguments.
             // If an argument is not here, then its name is identical to a lightGBM argument
             // and does not require a mapping, for example, Subsample.
@@ -72,14 +71,14 @@ namespace XGBoostNetLib
                {nameof(NumberOfLeaves),                       "max_leaves"},
                {nameof(MaxDepth),                             "max_depth" },
                
- #if false
+#if false
                {nameof(MinChildWeight),                   "min_child_weight" },
     	       {nameof(L2Regularization),          	      "lambda" },
        	       {nameof(L1Regularization),          	      "alpha" },
 // -------------------- lightgbm ----------------------
                {nameof(MinimumExampleCountPerLeaf),           "min_data_per_leaf"},
                {nameof(NumberOfLeaves),                       "num_leaves"},
-	       #endif
+#endif
                {nameof(MaximumBinCountPerFeature),            "max_bin" },
                {nameof(MinimumExampleCountPerGroup),          "min_data_per_group" },
                {nameof(MaximumCategoricalSplitPointCount),    "max_cat_threshold" },
@@ -90,7 +89,6 @@ namespace XGBoostNetLib
                {nameof(HandleMissingValue),                   "use_missing" },
                {nameof(UseZeroAsMissingValue),                "zero_as_missing" }
             };
-#endif
 
             /// <summary>
             /// The maximum number of bins that feature values will be bucketed in.
@@ -206,7 +204,6 @@ namespace XGBoostNetLib
             [Argument(ArgumentType.AtMostOnce, HelpText = "Minimum number of instances per categorical group.", ShortName = "mdpg")]
             public int MinimumExampleCountPerGroup = 100;
 
-#if false
             private BoosterParameterBase.OptionsBase _boosterParameter;
 
             /// <summary>
@@ -235,7 +232,6 @@ namespace XGBoostNetLib
                 }
 
             }
-#endif
 
             /// <summary>
             /// Determines whether to output progress status during training and evaluation.
