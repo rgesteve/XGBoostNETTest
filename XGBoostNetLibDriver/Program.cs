@@ -61,9 +61,11 @@ var options = new XGBoostBinaryTrainer.Options() {
   }
 };
 
-var pipeline = new XGBoostBinaryTrainer(options);
-
     Console.WriteLine($"Setting the weight of pos examples to: {options.WeightOfPositiveExamples}.");
+
+var pipeline = new XGBoostBinaryTrainer(options);
+pipeline.TrainModelCore();
+
 #endif
 
 #if false

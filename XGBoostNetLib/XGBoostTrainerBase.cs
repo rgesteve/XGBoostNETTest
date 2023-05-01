@@ -256,17 +256,20 @@ namespace XGBoostNetLib
                     return NameMapping[name];
                 return XGBoostInterfaceUtils.GetOptionName(name);
             }
+#endif
 
-
-            internal virtual Dictionary<string, object> ToDictionary(IHost host)
+            internal virtual Dictionary<string, object> ToDictionary(/* IHost host */)
             {
+#if false
                 Contracts.CheckValue(host, nameof(host));
+#endif
                 Dictionary<string, object> res = new Dictionary<string, object>();
 
-                var boosterParams = BoosterFactory.CreateComponent(host);
+                var boosterParams = BoosterFactory.CreateComponent(/* host */);
                 boosterParams.UpdateParameters(res);
                 res["booster"] = boosterParams.BoosterName;
 
+#if false
                 res["verbose"] = Silent ? "-1" : "1";
 #if false
 if (NumberOfThreads.HasValue)
@@ -281,9 +284,9 @@ if (NumberOfThreads.HasValue)
                 res[GetOptionName(nameof(MaximumCategoricalSplitPointCount))] = MaximumCategoricalSplitPointCount;
                 res[GetOptionName(nameof(CategoricalSmoothing))] = CategoricalSmoothing;
                 res[GetOptionName(nameof(L2CategoricalRegularization))] = L2CategoricalRegularization;
+#endif
                 return res;
             }
-#endif
 
             /// <summary>
             /// The number of boosting iterations. A new tree is created in each iteration, so this is equivalent to the number of trees.
@@ -304,7 +307,11 @@ if (NumberOfThreads.HasValue)
 
 #if false
         private protected override TModel TrainModelCore(TrainContext context)
+#else
+        public void TrainModelCore()
+#endif
         {
+#if false
             InitializeBeforeTraining();
             Host.CheckValue(context, nameof(context));
 
@@ -347,12 +354,20 @@ if (NumberOfThreads.HasValue)
 #endif
             }
             return CreatePredictor();
+#else
+	    LoadTrainingData();	    
+#endif
         }
 
         private protected virtual void InitializeBeforeTraining() { }
 
+#if false
         private DMatrix LoadTrainingData(IChannel ch, RoleMappedData trainData)
+#else
+        private void LoadTrainingData()
+#endif
         {
+#if false
             Host.AssertValue(ch);
             ch.CheckValue(trainData, nameof(trainData));
 
@@ -378,9 +393,12 @@ if (NumberOfThreads.HasValue)
             int rawNumCol = colType.GetVectorSize();
             FeatureCount = rawNumCol;
 #endif
+#endif
 
-            GetDefaultParameters(ch);
+            GetDefaultParameters(/* ch */);
+#if false
             CheckAndUpdateParametersBeforeTraining(ch, trainData);
+#endif
 
             foreach (var k in GbmOptions.Keys)
             {
@@ -388,14 +406,17 @@ if (NumberOfThreads.HasValue)
             }
 
 #if false
+#if false
             string param = LightGbmInterfaceUtils.JoinParameters(GbmOptions);
 #else
             DMatrix dtrain = LoadDMatrix(ch, factory, featureDimensionality);
             Console.WriteLine($"DMatrix has {dtrain.GetNumRows()} rows and {dtrain.GetNumCols()} columns.");
             return dtrain;
 #endif
+#endif
         }
 
+#if false
         /// <summary>
         /// Load dataset. Use row batch way to reduce peak memory cost.
         /// </summary>
@@ -536,10 +557,8 @@ if (NumberOfThreads.HasValue)
 #endif
             System.Console.WriteLine("***** In base trainer ctor 3");
 
-#if false
             XGBoostTrainerOptions = options;
-            GbmOptions = XGBoostTrainerOptions.ToDictionary(Host);
-#endif
+            GbmOptions = XGBoostTrainerOptions.ToDictionary(/* Host */);
         }
 
 #if false
@@ -617,14 +636,20 @@ if (NumberOfThreads.HasValue)
             return 20;
 #endif
         }
+#endif
 
-        private protected virtual void GetDefaultParameters(IChannel ch
+        private protected virtual void GetDefaultParameters(
+#if false
+	IChannel ch
 #if false
 , int numRow, bool hasCategorical, int totalCats
 #endif
     , bool hiddenMsg = false
+#endif
     )
         {
+	System.Console.WriteLine("***** in GetDefaultParameters");
+#if false
             double learningRate = XGBoostTrainerOptions.LearningRate ?? DefaultLearningRate(
 #if false
 	    numRow, hasCategorical, totalCats
@@ -645,8 +670,10 @@ if (NumberOfThreads.HasValue)
             GbmOptions["learning_rate"] = learningRate;
             GbmOptions["num_leaves"] = numberOfLeaves;
             GbmOptions["min_data_per_leaf"] = minimumExampleCountPerLeaf;
+#endif
         }
 
+#if false
         private protected abstract TModel CreatePredictor();
 
         /// <summary>

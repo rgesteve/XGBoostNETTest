@@ -170,6 +170,8 @@ namespace XGBoostNetLib
 
         internal void UpdateParameters(Dictionary<string, object> res)
         {
+		        System.Console.WriteLine($"**** in updateparameters.");
+	#if false
             FieldInfo[] fields = BoosterOptions.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var field in fields)
             {
@@ -181,6 +183,7 @@ namespace XGBoostNetLib
                 var name = NameMapping.ContainsKey(field.Name) ? NameMapping[field.Name] : XGBoostInterfaceUtils.GetOptionName(field.Name);
                 res[name] = field.GetValue(BoosterOptions);
             }
+	    #endif
         }
 
         /// <summary>
