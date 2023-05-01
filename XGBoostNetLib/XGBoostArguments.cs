@@ -26,19 +26,19 @@ namespace XGBoostNetLib
     {
         private protected static Dictionary<string, string> NameMapping = new Dictionary<string, string>()
         {
-           {nameof(OptionsBase.MinimumSplitGain),               "min_split_gain" },
            {nameof(OptionsBase.MaximumTreeDepth),               "max_depth"},
+   	#if false
            {nameof(OptionsBase.MinimumChildWeight),             "min_child_weight"},
 	   {nameof(OptionsBase.SubsampleFraction),              "subsample"},
            {nameof(OptionsBase.SubsampleFrequency),             "subsample_freq"},
            {nameof(OptionsBase.L1Regularization),               "reg_alpha"},
            {nameof(OptionsBase.L2Regularization),               "reg_lambda"},
+	#endif
         };
 
         public BoosterParameterBase(OptionsBase options)
         {
 #if false
-            Contracts.CheckUserArg(options.MinimumSplitGain >= 0, nameof(OptionsBase.MinimumSplitGain), "must be >= 0.");
             Contracts.CheckUserArg(options.MinimumChildWeight >= 0, nameof(OptionsBase.MinimumChildWeight), "must be >= 0.");
             Contracts.CheckUserArg(options.SubsampleFraction > 0 && options.SubsampleFraction <= 1, nameof(OptionsBase.SubsampleFraction), "must be in (0,1].");
             Contracts.CheckUserArg(options.FeatureFraction > 0 && options.FeatureFraction <= 1, nameof(OptionsBase.FeatureFraction), "must be in (0,1].");
@@ -51,19 +51,6 @@ namespace XGBoostNetLib
         public abstract class OptionsBase : IBoosterParameterFactory
         {
             internal BoosterParameterBase GetBooster() { return null; }
-            /// <summary>
-            /// The minimum loss reduction required to make a further partition on a leaf node of the tree.
-            /// </summary>
-            /// <value>
-            /// Larger values make the algorithm more conservative.
-            /// </value>
-            [Argument(ArgumentType.AtMostOnce,
-                HelpText = "Minimum loss reduction required to make a further partition on a leaf node of the tree. the larger, " +
-                    "the more conservative the algorithm will be.")]
-#if false
-            [TlcModule.Range(Min = 0.0)]
-#endif
-            public double MinimumSplitGain = 0;
 
             /// <summary>
             /// The maximum depth of a tree.
@@ -73,8 +60,22 @@ namespace XGBoostNetLib
             /// </value>
             [Argument(ArgumentType.AtMostOnce,
                 HelpText = "Maximum depth of a tree. 0 means no limit. However, tree still grows by best-first.")]
-            public int MaximumTreeDepth = 0;
+            public int MaximumTreeDepth = 6;
 
+            /// <summary>
+            /// Step size shrinkage used in update to prevents overfitting
+            /// </summary>
+            /// <value>
+            /// 0 means no limit.
+            /// </value>
+            [Argument(ArgumentType.AtMostOnce,
+                HelpText = "Step size shrinkage used in update to prevents overfitting")]
+#if false
+            [TlcModule.Range(Min = 0.0, Max = 1.0)]
+#endif
+            public double LearningRate = 0.3;
+
+#if false
 	    /// <summary>
             /// The minimum sum of instance weight needed to form a new node.
             /// </summary>
@@ -152,6 +153,7 @@ namespace XGBoostNetLib
                 HelpText = "L1 regularization term on weights, increase this value will make model more conservative.",
                 ShortName = "l1")]
             public double L1Regularization = 0;
+#endif
 
 #if false
             BoosterParameterBase IComponentFactory<BoosterParameterBase>.CreateComponent(IHostEnvironment env)
@@ -170,8 +172,6 @@ namespace XGBoostNetLib
 
         internal void UpdateParameters(Dictionary<string, object> res)
         {
-		        System.Console.WriteLine($"**** in updateparameters.");
-	#if false
             FieldInfo[] fields = BoosterOptions.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var field in fields)
             {
@@ -183,7 +183,6 @@ namespace XGBoostNetLib
                 var name = NameMapping.ContainsKey(field.Name) ? NameMapping[field.Name] : XGBoostInterfaceUtils.GetOptionName(field.Name);
                 res[name] = field.GetValue(BoosterOptions);
             }
-	    #endif
         }
 
         /// <summary>
@@ -263,7 +262,7 @@ namespace XGBoostNetLib
 #if false
             [TlcModule.Range(Inf = 0.0, Max = 1.0)]
 #endif
-            public double TreeDropFraction = 0.1;
+            public double TreeDropFraction = 0.0;
 
             /// <summary>
             /// The probability of skipping the dropout procedure during a boosting iteration.
@@ -272,14 +271,43 @@ namespace XGBoostNetLib
 #if false
             [TlcModule.Range(Inf = 0.0, Max = 1.0)]
 #endif
-            public double SkipDropFraction = 0.5;
+            public double SkipDropFraction = 0.0;
 
+#if false
             /// <summary>
             /// Whether to enable uniform drop.
             /// Allowed values: "uniform" or "weighted"
             /// </summary>
             [Argument(ArgumentType.AtMostOnce, HelpText = "True will enable uniform drop.")]
             public bool UniformDrop = false;
+#endif
+
+            /// <summary>
+            /// Type of sampling algorithm
+            /// </summary>
+            [Argument(ArgumentType.AtMostOnce, HelpText = "Type of sampling algorithm")]
+#if false
+            [TlcModule.SweepableDiscreteParam("SampleType", new object[] { "uniform", "weighted" })]
+#endif
+            public string SampleType = "uniform";
+
+            /// <summary>
+            /// Type of normalization algorithm
+            /// </summary>
+            [Argument(ArgumentType.AtMostOnce, HelpText = "Type of normalization algorithm")]
+#if false
+            [TlcModule.SweepableDiscreteParam("NormalizeType", new object[] { "tree", "forest" })]
+#endif
+            public string NormalizeType = "tree";
+
+            /// <summary>
+            /// Whether at least one tree is always dropped during the dropout
+            /// </summary>
+            [Argument(ArgumentType.AtMostOnce, HelpText = "Whether at least one tree is always dropped during the dropout")]
+#if false
+            [TlcModule.SweepableDiscreteParam("OneDrop", new object[] { true, false })]
+#endif
+            public bool OneDrop = false;
 
             internal override BoosterParameterBase BuildOptions() => new DartBooster(this);
         }

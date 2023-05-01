@@ -67,10 +67,10 @@ namespace XGBoostNetLib
             // For a complete list, see https://xgboost.readthedocs.io/en/latest/parameter.html
             private protected static Dictionary<string, string> NameMapping = new Dictionary<string, string>()
             {
+               {nameof(Verbose),                         "verbosity"},
 // -------------------- xgboost ----------------------
                {nameof(MinSplitLoss),                         "min_split_loss"},
                {nameof(NumberOfLeaves),                       "max_leaves"},
-               {nameof(MaxDepth),                             "max_depth" },
                
 #if false
                {nameof(MinChildWeight),                   "min_child_weight" },
@@ -181,6 +181,7 @@ namespace XGBoostNetLib
             /// </summary>
             public int? MinSplitLoss;
 
+#if false
             /// <summary>
             /// Maximum depth of a tree. Increasing this value will make the model more complex and
             /// more likely to overfit. 0 indicates no limit on depth. Beware that XGBoost aggressively
@@ -188,6 +189,7 @@ namespace XGBoostNetLib
             /// range: [0,\infnty], default=6
             /// </summary>
             public int? MaxDepth;
+#endif
 
             /// <summary>
             /// Minimum sum of instance weight (hessian) needed in a child. If the tree partition step
@@ -214,7 +216,7 @@ namespace XGBoostNetLib
             /// Available boosters are <see cref="DartBooster"/>, and <see cref="GradientBooster"/>.
             /// </value>
             [Argument(ArgumentType.Multiple,
-                        HelpText = "Which booster to use, can be gbtree, gblinear or dart. gbtree and dart use tree based model while gblinear uses linear function.",
+                        HelpText = "Which booster to use, can be gbtree or dart (gblinear is disabled for now).",
                         Name = "Booster",
                         SortOrder = 3)]
             internal IBoosterParameterFactory BoosterFactory = new GradientBooster.Options();
@@ -240,23 +242,18 @@ namespace XGBoostNetLib
             [Argument(ArgumentType.AtMostOnce, HelpText = "Verbose", ShortName = "v")]
             public bool Verbose = false;
 
-            /// <summary>
-            /// Controls the logging level in LighGBM.
+	    /// <summary>
+            /// Determines the number of threads used to run XGBoost
             /// </summary>
-            /// <value>
-            /// <see langword="true"/> means only output Fatal errors. <see langword="false"/> means output Fatal, Warning, and Info level messages.
-            /// </value>
-            [Argument(ArgumentType.AtMostOnce, HelpText = "Printing running messages.")]
-            public bool Silent = true;
+            [Argument(ArgumentType.AtMostOnce, HelpText = "Number of parallel threads used to run XGBoost.", ShortName = "nt")]
+            public int? NumberOfThreads;
 
-#if false
             private protected string GetOptionName(string name)
             {
                 if (NameMapping.ContainsKey(name))
                     return NameMapping[name];
                 return XGBoostInterfaceUtils.GetOptionName(name);
             }
-#endif
 
             internal virtual Dictionary<string, object> ToDictionary(/* IHost host */)
             {
@@ -269,13 +266,10 @@ namespace XGBoostNetLib
                 boosterParams.UpdateParameters(res);
                 res["booster"] = boosterParams.BoosterName;
 
-#if false
-                res["verbose"] = Silent ? "-1" : "1";
-#if false
-if (NumberOfThreads.HasValue)
+		if (NumberOfThreads.HasValue)
                     res["nthread"] = NumberOfThreads.Value;
-#endif
 
+#if false
                 res["seed"] = (Seed.HasValue) ? Seed : host.Rand.Next();
                 res[GetOptionName(nameof(MaximumBinCountPerFeature))] = MaximumBinCountPerFeature;
                 res[GetOptionName(nameof(HandleMissingValue))] = HandleMissingValue;
@@ -285,6 +279,7 @@ if (NumberOfThreads.HasValue)
                 res[GetOptionName(nameof(CategoricalSmoothing))] = CategoricalSmoothing;
                 res[GetOptionName(nameof(L2CategoricalRegularization))] = L2CategoricalRegularization;
 #endif
+                res[GetOptionName(nameof(Verbose))] = Verbose ? "1":"0";
                 return res;
             }
 
@@ -396,9 +391,7 @@ if (NumberOfThreads.HasValue)
 #endif
 
             GetDefaultParameters(/* ch */);
-#if false
-            CheckAndUpdateParametersBeforeTraining(ch, trainData);
-#endif
+            CheckAndUpdateParametersBeforeTraining(/* ch, trainData */);
 
             foreach (var k in GbmOptions.Keys)
             {
@@ -555,8 +548,6 @@ if (NumberOfThreads.HasValue)
             Contracts.CheckUserArg(options.L2CategoricalRegularization >= 0.0, nameof(options.L2CategoricalRegularization), "must be >= 0.");
 #endif
 #endif
-            System.Console.WriteLine("***** In base trainer ctor 3");
-
             XGBoostTrainerOptions = options;
             GbmOptions = XGBoostTrainerOptions.ToDictionary(/* Host */);
         }
@@ -675,17 +666,16 @@ if (NumberOfThreads.HasValue)
 
 #if false
         private protected abstract TModel CreatePredictor();
+#endif
 
         /// <summary>
         /// This function will be called before training. It will check the label/group and add parameters for specific applications.
         /// </summary>
-        private protected abstract void CheckAndUpdateParametersBeforeTraining(IChannel ch,
-            RoleMappedData data
+        private protected abstract void CheckAndUpdateParametersBeforeTraining(
 #if false
-	    , float[] labels, int[] groups
+	IChannel ch, RoleMappedData data, float[] labels, int[] groups
 #endif
         );
-#endif
     }
 }
 

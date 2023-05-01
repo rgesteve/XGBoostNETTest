@@ -43,4 +43,10 @@ uniformly.  For example, Booster arguments are collected via
 reflection, whereas arguments in the task-specific inheritance chain
 are hardcoded.
 
+To collect arguments, global, generic booster and booster-specific
+arguments are consolidated in the
+`*TrainerBase.OptionBase.ToDictionary` method.  As mentioned above,
+options are consolidated in a `Dictionary` called `GbmOptions`.
+Task-specific options are included in this dictionary when the virtual
+method `*TrainerBase.CheckAndUpdateParametersBeforeTraining`.
 

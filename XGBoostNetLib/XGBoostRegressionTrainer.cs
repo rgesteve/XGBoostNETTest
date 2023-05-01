@@ -205,10 +205,11 @@ namespace XGBoostNetLib
                     $"Label column '{data.Schema.Label.Value.Name}' is of type '{labelType.RawType}', but must be an unsigned int, boolean or float.");
             }
         }
+#endif
 
-        private protected override void CheckAndUpdateParametersBeforeTraining(IChannel ch, RoleMappedData data
+        private protected override void CheckAndUpdateParametersBeforeTraining(
 #if false
-	, float[] labels, int[] groups
+	IChannel ch, RoleMappedData data, float[] labels, int[] groups
 #endif
     )
         {
@@ -224,7 +225,6 @@ namespace XGBoostNetLib
                 new SchemaShape.Column(DefaultColumnNames.Score, SchemaShape.Column.VectorKind.Scalar, NumberDataViewType.Single, false, new SchemaShape(AnnotationUtils.GetTrainerOutputAnnotation()))
             };
         }
-#endif
 #endif
     }
 }

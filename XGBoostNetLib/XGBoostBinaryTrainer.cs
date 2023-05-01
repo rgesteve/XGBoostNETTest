@@ -227,10 +227,16 @@ namespace XGBoostNetLib
                     $"Label column '{data.Schema.Label.Value.Name}' is of type '{labelType.RawType}', but must be unsigned int, boolean or float.");
             }
         }
+#endif
 
-        private protected override void CheckAndUpdateParametersBeforeTraining(IChannel ch, RoleMappedData data, float[] labels, int[] groups)
-            => GbmOptions["objective"] = "binary";
+        private protected override void CheckAndUpdateParametersBeforeTraining(
+#if false
+	IChannel ch, RoleMappedData data, float[] labels, int[] groups
+#endif
+	)
+            => GbmOptions["objective"] = "binary:logistic";
 
+#if false
         private protected override SchemaShape.Column[] GetOutputColumnsCore(SchemaShape inputSchema)
         {
             return new[]
