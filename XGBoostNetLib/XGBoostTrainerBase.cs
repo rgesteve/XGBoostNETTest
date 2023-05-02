@@ -73,7 +73,6 @@ namespace XGBoostNetLib
                {nameof(NumberOfLeaves),                       "max_leaves"},
                
 #if false
-               {nameof(MinChildWeight),                   "min_child_weight" },
     	       {nameof(L2Regularization),          	      "lambda" },
        	       {nameof(L1Regularization),          	      "alpha" },
 // -------------------- lightgbm ----------------------
@@ -190,16 +189,6 @@ namespace XGBoostNetLib
             /// </summary>
             public int? MaxDepth;
 #endif
-
-            /// <summary>
-            /// Minimum sum of instance weight (hessian) needed in a child. If the tree partition step
-            /// results in a leaf node with the sum of instance weight less than min_child_weight, then
-            /// the building process will give up further partitioning. In linear regression task, this
-            /// simply corresponds to minimum number of instances needed to be in each node. The larger
-            /// <cref>MinChildWeight</cref> is, the more conservative the algorithm will be.
-            /// range: [0,\infnty]
-            /// </summary>
-            public float? MinChildWeight;
 
             /// <summary>
             /// The minimum number of data points per categorical group.

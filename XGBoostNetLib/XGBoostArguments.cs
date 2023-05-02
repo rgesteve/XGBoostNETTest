@@ -27,8 +27,8 @@ namespace XGBoostNetLib
         private protected static Dictionary<string, string> NameMapping = new Dictionary<string, string>()
         {
            {nameof(OptionsBase.MaximumTreeDepth),               "max_depth"},
-   	#if false
            {nameof(OptionsBase.MinimumChildWeight),             "min_child_weight"},
+   	#if false
 	   {nameof(OptionsBase.SubsampleFraction),              "subsample"},
            {nameof(OptionsBase.SubsampleFrequency),             "subsample_freq"},
            {nameof(OptionsBase.L1Regularization),               "reg_alpha"},
@@ -75,7 +75,6 @@ namespace XGBoostNetLib
 #endif
             public double LearningRate = 0.3;
 
-#if false
 	    /// <summary>
             /// The minimum sum of instance weight needed to form a new node.
             /// </summary>
@@ -91,8 +90,9 @@ namespace XGBoostNetLib
 #if false
             [TlcModule.Range(Min = 0.0)]
 #endif
-            public double MinimumChildWeight = 0.1;
+            public double MinimumChildWeight = 1;
 
+#if false
             /// <summary>
             /// The frequency of performing subsampling (bagging).
             /// </summary>
