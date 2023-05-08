@@ -3,6 +3,8 @@ open System.IO
 open System.Diagnostics
 open System.Text.Json
 
+open Microsoft.Data.Analysis
+
 let readFile (fname : string) : string option = 
     if File.Exists fname then
         Some (File.ReadAllText fname)
