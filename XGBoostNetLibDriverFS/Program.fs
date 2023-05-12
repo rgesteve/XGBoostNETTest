@@ -1,13 +1,20 @@
 ﻿open System
+//open System.Reflection
 open System.IO
 open System.Diagnostics
 open System.Text.Json
 
-// open Microsoft.Data.Analysis
+open Microsoft.Data.Analysis
 
 let readFile (fname : string) : string option = 
     if File.Exists fname then
         Some (File.ReadAllText fname)
+    else
+        None
+
+let readCsvFile (fname : string) =
+    if File.Exists fname then
+        Some (DataFrame.LoadCsv(fname))
     else
         None
 
@@ -42,12 +49,23 @@ let readFile (fname : string) : string option =
 [<EntryPoint>]    // This is the attribute syntax in F#
 let main argv =
   let proc = Process.GetCurrentProcess()
+  let nproc = Environment.ProcessorCount
   let test = async {                                       
     printfn "Loading data!"                   
     System.Threading.Thread.Sleep(500)
     printfn "Loaded Data!"
   }                  
   test |> Async.Start
-  printfn "Running as process %d" proc.Id
+  printfn "Running as process %d on a %d-core count machine" proc.Id nproc
+
+  //let datafname = Path.Combine(Assembly.GetExecutingAssembly().Location, "data", "boston_housing.csv")
+  let datafname = Path.Combine(AppContext.BaseDirectory, "data", "boston_housing.csv")
+
+  printfn "Checking for file %s..." datafname 
+  if File.Exists(datafname) then
+    printfn "the file exists"
+  else
+    printfn "couldnt' find the file"
+
   Console.ReadLine() |> ignore
   0
